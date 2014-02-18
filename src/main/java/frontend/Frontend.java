@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
-
 import templater.PageGenerator;
 
 /**
@@ -20,10 +19,10 @@ import templater.PageGenerator;
  */
 public class Frontend extends HttpServlet {
 
-    private String login = "";
-    private String pass = "";
-    private String hardUser = "test";
-    private String hardPass = "test";
+    private String hardUser1 = "test1";
+    private String hardPass1 = "test1";
+    private String hardUser2 = "test2";
+    private String hardPass2 = "test2";
 
     private AtomicLong userIdGenerator = new AtomicLong();
 
@@ -40,8 +39,8 @@ public class Frontend extends HttpServlet {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         HttpSession session = request.getSession();
-        Long userId = (Long) session.getAttribute("userId");
         if(request.getPathInfo().equals("/authform")){
+            Long userId = (Long) session.getAttribute("userId");
             if (userId == null){
                 pageVariables.put("error", "");
                 response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
@@ -55,21 +54,26 @@ public class Frontend extends HttpServlet {
                 return;
             }
         }
+        else{
+            pageVariables.put("error", "");
+            response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+            return;
+        }
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        login = request.getParameter("login");
-        pass = request.getParameter("password");
+        String login = request.getParameter("login");
+        String pass = request.getParameter("password");
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
         if(request.getPathInfo().equals("/authform")){
-            if(login.equals(hardUser) && pass.equals(hardPass)){
+            if((login.equals(hardUser1) && pass.equals(hardPass1)) || (pass.equals(hardPass2) && login.equals(hardUser2))) {
                 HttpSession session = request.getSession();
                 Long userId = (Long) session.getAttribute("userId");
                 if(userId == null){
-                    userId = (Long) userIdGenerator.getAndIncrement();
+                    userId = userIdGenerator.getAndIncrement();
                 }
                 session.setAttribute("userId", userId);
                 pageVariables.put("refreshPeriod", "1000");
