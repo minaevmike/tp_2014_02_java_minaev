@@ -19,18 +19,15 @@ import templater.PageGenerator;
  */
 public class Frontend extends HttpServlet {
 
-    private String hardUser1 = "test1";
-    private String hardPass1 = "test1";
-    private String hardUser2 = "test2";
-    private String hardPass2 = "test2";
-
+    private static final String hardUser1 = "test1";
+    private static final String hardPass1 = "test1";
+    private static final String hardUser2 = "test2";
+    private static final String hardPass2 = "test2";
+    private static DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     private AtomicLong userIdGenerator = new AtomicLong();
 
     public static String getTime() {
-        Date date = new Date();
-        date.getTime();
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-        return formatter.format(date);
+        return formatter.format(new Date());
     }
 
     public void doGet(HttpServletRequest request,
