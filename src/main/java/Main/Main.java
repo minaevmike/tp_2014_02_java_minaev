@@ -6,12 +6,29 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import java.sql.SQLException;
+import java.util.List;
 
-/**
- * Created by Mike on 16.02.14.
- */
+import logic.user;
+import DAO.Factory;
+
+
 public class Main {
     public static void main(String[] args) throws Exception {
+        /*user u = new user();
+        u.setName("ere213r");
+        u.setPass("ewr");*/
+        //Factory.getInstance().getUserDAO().addUser(u);
+        /*List <user> users = Factory.getInstance().getUserDAO().getAllUsers();
+        for (int i = 0; i < users.size(); ++i){
+            System.out.println(users.get(i).getId() + " " + users.get(i).getName() + " " + users.get(i).getPass());
+        }*/
+        /*u = Factory.getInstance().getUserDAO().getUserByName("tesasdsadt");
+        if(u != null)
+            System.out.println(u.getPass());
+        else {
+            System.out.println("No such user");
+        }*/
         Frontend frontend = new Frontend();
 
         Server server = new Server(8080);

@@ -1,16 +1,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>Авторизация</title>
+	<title>Регистрация</title>
 </head>
 <body>
-    <img src="hi.jpg"/>
-    <br/>
-	<form action = "/authform" method = "post">
+    <h1> Регистрация </h1>
+	<form action = "/registration" method = "post">
 	Логин :  <input type="text" name="login" /> <br />
     Пароль: <input type="password" name="password" /> <br />
-	<input type="submit" value="Отправить">
+	<input type="submit" value="Зарегестрироваться">
 	</form>
-	<a href="/registration">Регистрация</a>
+	<a href="/">Вход</a>
     <p> ${error}</p>
 </body>
 </html>
