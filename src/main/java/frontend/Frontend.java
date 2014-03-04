@@ -55,8 +55,17 @@ public class Frontend extends HttpServlet {
             response.getWriter().println(PageGenerator.getPage("registration.tml", pageVariables));
         }
         else{
-            pageVariables.put("error", "");
-            response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+            Long userId = (Long) session.getAttribute("userId");
+            if(userId != null) {
+                pageVariables.put("refreshPeriod", "1000");
+                pageVariables.put("serverTime", getTime());
+                pageVariables.put("userId", userId);
+                response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
+            }
+            else {
+                pageVariables.put("error", "");
+                response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+            }
         }
     }
 
