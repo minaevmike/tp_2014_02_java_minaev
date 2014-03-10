@@ -10,17 +10,17 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name="users")
-public class user {
+public class User {
     private Long id;
     private String name;
     private String pass;
 
-    public user(){
+    public User(){
         name = null;
     }
 
-    public user(user u){
-        name = u.getName();
+    public User(User user){
+        name = user.getName();
     }
 
     @Id

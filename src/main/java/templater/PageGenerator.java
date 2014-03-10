@@ -9,9 +9,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Map;
-/**
- * Created by Mike on 16.02.14.
- */
+
 public class PageGenerator {
     private static final String HTML_DIR = "tml";
     private static final Configuration CFG = new Configuration();

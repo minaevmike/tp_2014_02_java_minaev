@@ -6,17 +6,12 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import java.sql.SQLException;
-import java.util.List;
-
-import logic.user;
-import DAO.Factory;
-
+import util.HibernateUtil;
 
 public class Main {
     public static void main(String[] args) throws Exception {
         Frontend frontend = new Frontend();
-
+        HibernateUtil.getSessionFactory();
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
@@ -29,7 +24,6 @@ public class Main {
         HandlerList handlers = new HandlerList();
         handlers.setHandlers(new Handler[]{resource_handler, context});
         server.setHandler(handlers);
-
         server.start();
         server.join();
     }

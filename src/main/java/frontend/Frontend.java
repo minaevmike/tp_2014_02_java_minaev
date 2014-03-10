@@ -6,23 +6,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
+
+import DatabaseService.DatabaseService;
 import templater.PageGenerator;
-import logic.user;
-import DAO.Factory;
+import logic.User;
 
 public class Frontend extends HttpServlet {
 
-    private static final String hardUser1 = "test1";
-    private static final String hardPass1 = "test1";
-    private static final String hardUser2 = "test2";
-    private static final String hardPass2 = "test2";
     private static DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
     private AtomicLong userIdGenerator = new AtomicLong();
 
@@ -77,14 +73,8 @@ public class Frontend extends HttpServlet {
         response.setStatus(HttpServletResponse.SC_OK);
         Map<String, Object> pageVariables = new HashMap<>();
         if(request.getPathInfo().equals("/authform")){
-            user u = null;
-            try {
-                u = Factory.getInstance().getUserDAO().getUserByName(login);
-            }
-            catch (Exception e) {
-                e.printStackTrace();
-            }
-            if(u != null && u.getPass().equals(pass)) {
+            User user = DatabaseService.getUserByName(login);
+            if(user != null && user.getPass().equals(pass)) {
                 HttpSession session = request.getSession();
                 Long userId = (Long) session.getAttribute("userId");
                 if(userId == null){
@@ -103,24 +93,11 @@ public class Frontend extends HttpServlet {
         }
         else
             if(request.getPathInfo().equals("/registration")) {
-                user u = null;
-                try{
-                    u = Factory.getInstance().getUserDAO().getUserByName(login);
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-                if (u == null){
-                    u = new user();
-                    u.setName(login);
-                    u.setPass(pass);
-                    try{
-                        Factory.getInstance().getUserDAO().addUser(u);
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-                    pageVariables.put("error", "Successfully registration");
+                User user = new User();
+                user.setName(login);
+                user.setPass(pass);
+                if(DatabaseService.addUser(user)){
+                    pageVariables.put("error", "Successfully registrated");
                     response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
                 }
                 else {
