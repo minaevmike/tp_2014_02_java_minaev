@@ -34,4 +34,21 @@ public class DatabaseTest {
         user.setPass("test");
         Assert.assertFalse(DatabaseService.addUser(user));
     }
+
+    @Test
+    public void testGoodDeleteUser(){
+        User user = new User();
+        user.setName(RandomStringUtils.randomAlphanumeric(50));
+        user.setPass("123");
+        DatabaseService.addUser(user);
+        Assert.assertTrue(DatabaseService.deleteUser(user));
+    }
+
+    @Test
+    public void testFailDeleteUser(){
+        User user = new User();
+        user.setName(RandomStringUtils.randomAlphanumeric(50));
+        user.setPass("123");
+        Assert.assertFalse(DatabaseService.deleteUser(user));
+    }
 }
