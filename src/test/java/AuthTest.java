@@ -1,6 +1,5 @@
 
 import frontend.Frontend;
-import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.mockito.Mockito;

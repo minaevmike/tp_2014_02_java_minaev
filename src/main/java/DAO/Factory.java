@@ -1,10 +1,10 @@
-package DAO;
+package dao;
 
-import DAO.Impl.userDAOImpl;
+import dao.impl.UserDAOImpl;
 
 public class Factory {
 
-    private static usersDAO userDAO = null;
+    private static UsersDAO userDAO = null;
     private static Factory instance = null;
 
     public static synchronized Factory getInstance(){
@@ -14,9 +14,9 @@ public class Factory {
         return instance;
     }
 
-    public usersDAO getUserDAO(){
+    public UsersDAO getUserDAO(){
         if(userDAO == null){
-            userDAO = new userDAOImpl();
+            userDAO = new UserDAOImpl();
         }
         return userDAO;
     }

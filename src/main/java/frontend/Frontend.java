@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-import DatabaseService.DatabaseService;
+import databaseservice.DatabaseService;
 import templater.PageGenerator;
 import logic.User;
 

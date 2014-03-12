@@ -1,7 +1,7 @@
-package DatabaseService;
+package databaseservice;
 
 import logic.User;
-import DAO.Factory;
+import dao.Factory;
 
 
 public class DatabaseService {

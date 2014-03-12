@@ -4,7 +4,7 @@ import logic.User;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import DatabaseService.DatabaseService;
+import databaseservice.DatabaseService;
 
 public class DatabaseTest {
     @Test

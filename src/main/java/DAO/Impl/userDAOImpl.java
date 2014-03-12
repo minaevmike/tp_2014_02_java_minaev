@@ -1,13 +1,13 @@
-package DAO.Impl;
+package dao.impl;
 
+import dao.UsersDAO;
 import org.hibernate.Session;
 import util.HibernateUtil;
 
-import DAO.usersDAO;
 import logic.User;
 
 
-public class userDAOImpl implements usersDAO {
+public class UserDAOImpl implements UsersDAO {
     @Override
     public void addUser(User user) {
         Session session = null;
