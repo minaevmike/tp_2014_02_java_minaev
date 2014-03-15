@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import frontend.Frontend;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -16,14 +17,18 @@ public class RoutingTest {
     final private static HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
     final private static HttpSession httpSession = Mockito.mock(HttpSession.class);
     private static String url;
-    @Test
-    public void testMainPageRouting() throws Exception{
-        Frontend frontend = new Frontend();
-        url = "/";
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
+    final private static StringWriter stringWriter = new StringWriter();
+    final private static PrintWriter writer = new PrintWriter(stringWriter);
+    final private static Frontend frontend = new Frontend();
+    @Before
+    public void init() throws Exception{
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(request.getSession()).thenReturn(httpSession);
+        Mockito.when(request.getPathInfo()).thenReturn(url);
+    }
+    @Test
+    public void testMainPageRouting() throws Exception{
+        url = "/";
         Mockito.when(request.getPathInfo()).thenReturn(url);
         Mockito.when(httpSession.getAttribute("userId")).thenReturn(null);
         frontend.doGet(request, response);
@@ -31,12 +36,7 @@ public class RoutingTest {
     }
     @Test
     public void testRegistartionPageRouting() throws Exception{
-        Frontend frontend = new Frontend();
         url = "/registration";
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        Mockito.when(response.getWriter()).thenReturn(writer);
-        Mockito.when(request.getSession()).thenReturn(httpSession);
         Mockito.when(request.getPathInfo()).thenReturn(url);
         frontend.doGet(request, response);
         Assert.assertTrue(stringWriter.toString().contains("<title>Registartion</title>"));
@@ -44,13 +44,8 @@ public class RoutingTest {
 
     @Test
     public void testTimerPageRounting() throws Exception{
-        Frontend frontend = new Frontend();
         url = "/authform";
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(httpSession.getAttribute("userId")).thenReturn(0L);
-        Mockito.when(request.getSession()).thenReturn(httpSession);
         Mockito.when(request.getPathInfo()).thenReturn(url);
         frontend.doGet(request, response);
         Assert.assertTrue(stringWriter.toString().contains("<title>Timer</title>"));

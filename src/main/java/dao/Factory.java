@@ -1,7 +1,5 @@
 package dao;
 
-import dao.impl.UserDAOImpl;
-
 public class Factory {
 
     private static UsersDAO userDAO = null;

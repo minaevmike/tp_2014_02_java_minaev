@@ -10,6 +10,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import java.util.Random;
 
 public class PageGeneratorTest {
+
     @Test
     public void testMainPage() {
         Map<String, Object> pageVariables = new HashMap<>();

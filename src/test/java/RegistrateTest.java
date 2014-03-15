@@ -3,6 +3,7 @@
 import frontend.Frontend;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -17,15 +18,18 @@ public class RegistrateTest {
     final private static HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
     final private static HttpSession httpSession = Mockito.mock(HttpSession.class);
     private static String url;
-    @Test
-    public void testFailRegistration() throws Exception{
-        Frontend frontend = new Frontend();
+    final private static StringWriter stringWriter = new StringWriter();
+    final private static PrintWriter writer = new PrintWriter(stringWriter);
+    final private static Frontend frontend = new Frontend();
+    @Before
+    public void init() throws Exception{
         url = "/registration";
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(request.getSession()).thenReturn(httpSession);
         Mockito.when(request.getPathInfo()).thenReturn(url);
+    }
+    @Test
+    public void testFailRegistration() throws Exception{
         Mockito.when(request.getParameter("login")).thenReturn("test");
         Mockito.when(request.getParameter("password")).thenReturn("test");
         frontend.doPost(request, response);
@@ -33,14 +37,7 @@ public class RegistrateTest {
     }
     @Test
     public void testGoodRegistration() throws Exception{
-        Frontend frontend = new Frontend();
-        url = "/registration";
         String randomUser = RandomStringUtils.randomAlphanumeric(50);
-        StringWriter stringWriter = new StringWriter();
-        PrintWriter writer = new PrintWriter(stringWriter);
-        Mockito.when(response.getWriter()).thenReturn(writer);
-        Mockito.when(request.getSession()).thenReturn(httpSession);
-        Mockito.when(request.getPathInfo()).thenReturn(url);
         Mockito.when(request.getParameter("login")).thenReturn(randomUser);
         Mockito.when(request.getParameter("password")).thenReturn("test");
         frontend.doPost(request, response);

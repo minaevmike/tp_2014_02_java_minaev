@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import databaseservice.DatabaseService;
 import templater.PageGenerator;
@@ -19,49 +18,48 @@ import logic.User;
 
 public class Frontend extends HttpServlet {
 
-    private static DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-    private AtomicLong userIdGenerator = new AtomicLong();
+    final private static DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
     public static String getTime() {
         return formatter.format(new Date());
     }
 
+    private static Map<String, Object> timerVariables(Long userId){
+        Map<String, Object> pageVariables = new HashMap<>();
+        pageVariables.put("refreshPeriod", "1000");
+        pageVariables.put("serverTime", getTime());
+        pageVariables.put("userId",userId);
+        return pageVariables;
+    }
+    private static Map<String, Object> singleVaraiable(String name, String value){
+        Map<String, Object> pageVariables = new HashMap<>();
+        pageVariables.put(name, value);
+        return pageVariables;
+    }
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         HttpSession session = request.getSession();
-        if(request.getPathInfo().equals("/authform")){
-            Long userId = (Long) session.getAttribute("userId");
-            if (userId == null){
-                pageVariables.put("error", "");
-                response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
-            }
-            else {
-                pageVariables.put("refreshPeriod", "1000");
-                pageVariables.put("serverTime", getTime());
-                pageVariables.put("userId", userId);
-                response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
-            }
-        }
-        else
-        if(request.getPathInfo().equals("/registration")){
-            pageVariables.put("error", "");
-            response.getWriter().println(PageGenerator.getPage("registration.tml", pageVariables));
-        }
-        else{
-            Long userId = (Long) session.getAttribute("userId");
-            if(userId != null) {
-                pageVariables.put("refreshPeriod", "1000");
-                pageVariables.put("serverTime", getTime());
-                pageVariables.put("userId", userId);
-                response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
-            }
-            else {
-                pageVariables.put("error", "");
-                response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
-            }
+        Map<String, Object> pageVariables;
+        switch (request.getPathInfo()){
+            case "/registration":
+                pageVariables = singleVaraiable("error", "");
+                response.getWriter().println(PageGenerator.getPage("registration.tml", pageVariables));
+                break;
+            case "/authform":
+            default:
+                Long userId = (Long) session.getAttribute("userId");
+                if(userId != null) {
+                    pageVariables = timerVariables(userId);
+                    response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
+                }
+                else {
+                    pageVariables = singleVaraiable("error", "");
+                    response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+                }
+                break;
+
         }
     }
 
@@ -71,39 +69,39 @@ public class Frontend extends HttpServlet {
         String pass = request.getParameter("password");
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-        Map<String, Object> pageVariables = new HashMap<>();
-        if(request.getPathInfo().equals("/authform")){
-            User user = DatabaseService.getUserByName(login);
-            if(user != null && user.getPass().equals(pass)) {
-                HttpSession session = request.getSession();
-                Long userId = (Long) session.getAttribute("userId");
-                if(userId == null){
-                    userId = userIdGenerator.getAndIncrement();
+        Map<String, Object> pageVariables;
+        User user;
+        switch (request.getPathInfo()){
+            case "/authform":
+                user = DatabaseService.getUserByName(login);
+                if(user != null && user.getPass().equals(pass)) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("userId", user.getId());
+                    pageVariables = timerVariables(user.getId());
+                    response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
                 }
-                session.setAttribute("userId", userId);
-                pageVariables.put("refreshPeriod", "1000");
-                pageVariables.put("serverTime", getTime());
-                pageVariables.put("userId", userId);
-                response.getWriter().println(PageGenerator.getPage("userId.tml", pageVariables));
-            }
-            else{
-                pageVariables.put("error", "Wrong password or username");
-                response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
-            }
-        }
-        else
-            if(request.getPathInfo().equals("/registration")) {
-                User user = new User();
+                else{
+                    pageVariables = singleVaraiable("error", "Wrong password or username");
+                    response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+                }
+                break;
+            case "/registration":
+                user = new User();
                 user.setName(login);
                 user.setPass(pass);
                 if(DatabaseService.addUser(user)){
-                    pageVariables.put("error", "Successfully registrated");
+                    pageVariables = singleVaraiable("error", "Successfully registrated");
                     response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
                 }
                 else {
-                    pageVariables.put("error", "Already registarted");
+                    pageVariables = singleVaraiable("error", "Already registarted");
                     response.getWriter().println(PageGenerator.getPage("registration.tml", pageVariables));
                 }
-            }
+                break;
+            default:
+                pageVariables = singleVaraiable("error", "Unknown rage");
+                response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
+
+        }
     }
 }
