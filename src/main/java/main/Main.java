@@ -11,12 +11,12 @@ import util.HibernateUtil;
 public class Main {
     public static void main(String[] args) throws Exception {
         Frontend frontend = new Frontend();
+        (new Thread(frontend)).start();
         HibernateUtil.getSessionFactory();
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         server.setHandler(context);
         context.addServlet(new ServletHolder(frontend), "/*");
-
         ResourceHandler resource_handler = new ResourceHandler();
         resource_handler.setDirectoriesListed(true);
         resource_handler.setResourceBase("static");

@@ -16,10 +16,11 @@ import databaseservice.DatabaseService;
 import templater.PageGenerator;
 import logic.User;
 
-public class Frontend extends HttpServlet {
+public class Frontend  extends HttpServlet implements Runnable {
 
+    private static Object lock = new Object();
     final private static DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-
+    private static int handleCount = 0;
     public static String getTime() {
         return formatter.format(new Date());
     }
@@ -38,6 +39,9 @@ public class Frontend extends HttpServlet {
     }
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws ServletException, IOException {
+        synchronized (lock){
+            handleCount++;
+        }
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
         HttpSession session = request.getSession();
@@ -65,6 +69,9 @@ public class Frontend extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
+        synchronized (lock){
+            handleCount++;
+        }
         String login = request.getParameter("login");
         String pass = request.getParameter("password");
         response.setContentType("text/html;charset=utf-8");
@@ -102,6 +109,16 @@ public class Frontend extends HttpServlet {
                 pageVariables = singleVaraiable("error", "Unknown rage");
                 response.getWriter().println(PageGenerator.getPage("authform.tml", pageVariables));
 
+        }
+    }
+
+    public void run(){
+        Long time = System.currentTimeMillis();
+        while (true){
+            if(System.currentTimeMillis() - time > 5000){
+                System.out.println(handleCount);
+                time = System.currentTimeMillis();
+            }
         }
     }
 }
