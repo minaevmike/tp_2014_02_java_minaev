@@ -1,5 +1,7 @@
 package main;
+import databaseservice.DatabaseService;
 import frontend.Frontend;
+import messages.MessageSystem;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -10,8 +12,12 @@ import util.HibernateUtil;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        Frontend frontend = new Frontend();
+        MessageSystem ms = new MessageSystem();
+        Frontend frontend = new Frontend(ms);
+        DatabaseService databaseService = new DatabaseService(ms);
         (new Thread(frontend)).start();
+        (new Thread(databaseService)).start();
+        (new Thread(databaseService)).start();
         HibernateUtil.getSessionFactory();
         Server server = new Server(8080);
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);

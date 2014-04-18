@@ -1,15 +1,33 @@
 package databaseservice;
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import logic.User;
 import dao.Factory;
+import messages.Abonent;
+import messages.Address;
+import messages.MessageSystem;
+import messages.TimeHelper;
+import org.hibernate.exception.JDBCConnectionException;
 
 
-public class DatabaseService {
-    public static User getUserByName(String name) {
+public class DatabaseService implements Abonent,Runnable {
+    private Address address;
+    private MessageSystem ms;
+
+    public DatabaseService(MessageSystem ms){
+        this.ms = ms;
+        this.address = new Address();
+        ms.addService(this);
+        ms.getAddressService().setAccountService(address);
+    }
+
+    public static User getUserByName(String name)  {
+        TimeHelper.sleep(2000);
         return Factory.getInstance().getUserDAO().getUserByName(name);
     }
 
-    public static boolean addUser(User user){
+    public static boolean addUser(User user) throws JDBCConnectionException {
+        TimeHelper.sleep(2000);
         if(getUserByName(user.getName()) == null){
             Factory.getInstance().getUserDAO().addUser(user);
             return true;
@@ -17,14 +35,26 @@ public class DatabaseService {
         else
             return false;
     }
-
-    public static boolean deleteUser(User user){
+    public void run(){
+        while(true){
+            ms.execForAbonent(this);
+            TimeHelper.sleep(10);
+        }
+    }
+    public static boolean deleteUser(User user) throws JDBCConnectionException {
         if(getUserByName(user.getName()) != null){
             Factory.getInstance().getUserDAO().deleteUser(user);
             return true;
         }
         else
             return false;
+    }
+    public Address getAddress() {
+        return address;
+    }
+
+    public MessageSystem getMessageSystem(){
+        return ms;
     }
 
 }

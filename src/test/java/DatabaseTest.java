@@ -1,5 +1,6 @@
 
 
+import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import logic.User;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
@@ -8,19 +9,19 @@ import databaseservice.DatabaseService;
 
 public class DatabaseTest {
     @Test
-    public void testGoodGetUser(){
+    public void testGoodGetUser() throws CommunicationsException{
         User user = DatabaseService.getUserByName("test");
         Assert.assertNotNull(user);
     }
 
     @Test
-    public void testFailGetUser(){
+    public void testFailGetUser() throws CommunicationsException {
         User user = DatabaseService.getUserByName(RandomStringUtils.randomAlphanumeric(50));
         Assert.assertNull(user);
     }
 
     @Test
-    public void testGoodRegistration(){
+    public void testGoodRegistration() throws CommunicationsException {
         User user = new User();
         user.setName(RandomStringUtils.randomAlphanumeric(50));
         user.setPass("test");
@@ -28,7 +29,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testFailRegistration(){
+    public void testFailRegistration() throws CommunicationsException {
         User user = new User();
         user.setName("test");
         user.setPass("test");
@@ -36,7 +37,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testGoodDeleteUser(){
+    public void testGoodDeleteUser() throws CommunicationsException {
         User user = new User();
         user.setName(RandomStringUtils.randomAlphanumeric(50));
         user.setPass("123");
@@ -45,7 +46,7 @@ public class DatabaseTest {
     }
 
     @Test
-    public void testFailDeleteUser(){
+    public void testFailDeleteUser() throws CommunicationsException{
         User user = new User();
         user.setName(RandomStringUtils.randomAlphanumeric(50));
         user.setPass("123");

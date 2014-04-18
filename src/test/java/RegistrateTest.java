@@ -1,6 +1,7 @@
 
 
 import frontend.Frontend;
+import messages.MessageSystem;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -20,7 +21,8 @@ public class RegistrateTest {
     private static String url;
     final private static StringWriter stringWriter = new StringWriter();
     final private static PrintWriter writer = new PrintWriter(stringWriter);
-    final private static Frontend frontend = new Frontend();
+    private static MessageSystem ms = new MessageSystem();
+    final private static Frontend frontend = new Frontend(ms);
     @Before
     public void init() throws Exception{
         url = "/registration";

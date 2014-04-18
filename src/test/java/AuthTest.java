@@ -1,5 +1,6 @@
 
 import frontend.Frontend;
+import messages.MessageSystem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,8 @@ public class AuthTest {
     final private static HttpServletResponse response = Mockito.mock(HttpServletResponse.class);
     final private static HttpSession httpSession = Mockito.mock(HttpSession.class);
     private static String url;
-    final private static Frontend frontend = new Frontend();
+    private static MessageSystem ms = new MessageSystem();
+    final private static Frontend frontend = new Frontend(ms);
     private static StringWriter stringWriter = new StringWriter();
     private static PrintWriter writer = new PrintWriter(stringWriter);
     @Before

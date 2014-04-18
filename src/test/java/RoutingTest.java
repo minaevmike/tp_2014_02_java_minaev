@@ -4,6 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import frontend.Frontend;
+import messages.MessageSystem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,8 @@ public class RoutingTest {
     private static String url;
     final private static StringWriter stringWriter = new StringWriter();
     final private static PrintWriter writer = new PrintWriter(stringWriter);
-    final private static Frontend frontend = new Frontend();
+    private static MessageSystem ms = new MessageSystem();
+    final private static Frontend frontend = new Frontend(ms);
     @Before
     public void init() throws Exception{
         Mockito.when(response.getWriter()).thenReturn(writer);
