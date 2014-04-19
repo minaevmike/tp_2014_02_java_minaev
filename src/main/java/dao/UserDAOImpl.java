@@ -2,6 +2,7 @@ package dao;
 
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import dao.UsersDAO;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.exception.JDBCConnectionException;
 import org.hibernate.service.UnknownServiceException;
@@ -12,7 +13,7 @@ import logic.User;
 
 public class UserDAOImpl implements UsersDAO {
     @Override
-    public void addUser(User user) throws JDBCConnectionException{
+    public void addUser(User user) throws HibernateException{
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
@@ -31,15 +32,16 @@ public class UserDAOImpl implements UsersDAO {
     }
 
     @Override
-    public User getUserByName(String name) {
+    public User getUserByName(String name) throws HibernateException{
         Session session = null;
         User user = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             user = (User) session.createQuery("from User where name = :name").setParameter("name", name).uniqueResult();
         }
-        catch (JDBCConnectionException e){
+        catch (HibernateException e){
             System.out.println("Catch");
+            throw e;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -53,7 +55,7 @@ public class UserDAOImpl implements UsersDAO {
     }
 
     @Override
-    public void deleteUser(User user) throws JDBCConnectionException {
+    public void deleteUser(User user) throws HibernateException {
         Session session = null;
         try {
             session = HibernateUtil.getSessionFactory().openSession();

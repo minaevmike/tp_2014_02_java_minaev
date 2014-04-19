@@ -3,6 +3,7 @@ package messages;
 import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import databaseservice.DatabaseService;
 import logic.User;
+import org.hibernate.HibernateException;
 import org.hibernate.exception.JDBCConnectionException;
 
 public class MsgGetUserId extends MsgToAS {
@@ -33,7 +34,8 @@ public class MsgGetUserId extends MsgToAS {
                 databaseService.getMessageSystem().sendMessage(new MsgUpdateUserId(getTo(),getFrom(),sessionId, "No such user"));
             }
         }
-        catch (JDBCConnectionException e){
+        catch (HibernateException e){
+            System.out.println("CARTTT");
             databaseService.getMessageSystem().sendMessage(new MsgUpdateUserId(getTo(),getFrom(),sessionId, "Some works on server"));
         }
     }

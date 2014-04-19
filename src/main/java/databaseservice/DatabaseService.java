@@ -7,6 +7,7 @@ import messages.Abonent;
 import messages.Address;
 import messages.MessageSystem;
 import messages.TimeHelper;
+import org.hibernate.HibernateException;
 import org.hibernate.exception.JDBCConnectionException;
 
 
@@ -21,19 +22,24 @@ public class DatabaseService implements Abonent,Runnable {
         ms.getAddressService().setAccountService(address);
     }
 
-    public static User getUserByName(String name)  {
+    public static User getUserByName(String name) throws HibernateException{
         TimeHelper.sleep(2000);
         return Factory.getInstance().getUserDAO().getUserByName(name);
     }
 
-    public static boolean addUser(User user) throws JDBCConnectionException {
+    public static boolean addUser(User user) throws HibernateException {
         TimeHelper.sleep(2000);
-        if(getUserByName(user.getName()) == null){
-            Factory.getInstance().getUserDAO().addUser(user);
-            return true;
+        try{
+            if(getUserByName(user.getName()) == null){
+                Factory.getInstance().getUserDAO().addUser(user);
+                return true;
+            }
+            else
+                return false;
+            }
+        catch (HibernateException e){
+            throw e;
         }
-        else
-            return false;
     }
     public void run(){
         while(true){
