@@ -1,0 +1,6 @@
+<class type="util.resources.Templates">
+    <auth>authform.tml</auth>
+    <reging>reging.tml</reging>
+    <registration>registration.tml</registration>
+    <userId>userId.tml</userId>
+</class>

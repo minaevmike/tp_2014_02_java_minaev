@@ -34,12 +34,13 @@ public class PageGeneratorTest {
     public void testGoodLoingPage(){
         Random random = new Random();
         Map<String, Object> pageVariables = new HashMap<>();
-        Long userId = random.nextLong();
+        //Long userId = random.nextLong();
+        String userId = RandomStringUtils.randomAlphanumeric(50);
         pageVariables.put("refreshPeriod", "1000");
         pageVariables.put("serverTime", "");
         pageVariables.put("userId", userId);
         String file = "userId.tml";
         String page = PageGenerator.getPage(file, pageVariables);
-        Assert.assertThat(page, containsString(String.valueOf(userId)));
+        Assert.assertThat(page, containsString(userId));
     }
 }

@@ -1,11 +1,7 @@
 package dao;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
-import dao.UsersDAO;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
-import org.hibernate.exception.JDBCConnectionException;
-import org.hibernate.service.UnknownServiceException;
 import util.HibernateUtil;
 
 import logic.User;
@@ -40,7 +36,6 @@ public class UserDAOImpl implements UsersDAO {
             user = (User) session.createQuery("from User where name = :name").setParameter("name", name).uniqueResult();
         }
         catch (HibernateException e){
-            System.out.println("Catch");
             throw e;
         }
         catch (Exception e) {

@@ -1,6 +1,5 @@
 package databaseservice;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import logic.User;
 import dao.Factory;
 import messages.Abonent;
@@ -38,6 +37,7 @@ public class DatabaseService implements Abonent,Runnable {
                 return false;
             }
         catch (HibernateException e){
+            e.printStackTrace();
             throw e;
         }
     }

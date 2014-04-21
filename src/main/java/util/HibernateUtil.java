@@ -1,11 +1,16 @@
 package util;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.exception.JDBCConnectionException;
+import util.resources.Database;
+import util.resources.ResourceFactory;
+import util.vfs.VFS;
+import util.vfs.VFSImpl;
+
+import java.io.File;
 
 
 public class HibernateUtil {
@@ -13,8 +18,10 @@ public class HibernateUtil {
 
     static {
         try {
-            Configuration cfg = new Configuration().addResource("hibernate.cfg.xml");
-            cfg.configure();
+            VFS vfs = new VFSImpl("");
+            Database database = (Database)ResourceFactory.getInstance().get(vfs.getAbsolutePath("data/db.xml"));
+            Configuration cfg = new Configuration();
+            cfg.configure(new File(vfs.getAbsolutePath(database.getConfig())));
             StandardServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(cfg.getProperties()).build();
             sessionFactory = cfg.buildSessionFactory(serviceRegistry);
         }

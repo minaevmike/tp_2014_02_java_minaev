@@ -1,7 +1,9 @@
 
 
+import databaseservice.DatabaseService;
 import frontend.Frontend;
 import messages.MessageSystem;
+import messages.TimeHelper;
 import org.apache.commons.lang.RandomStringUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,10 +24,14 @@ public class RegistrateTest {
     final private static StringWriter stringWriter = new StringWriter();
     final private static PrintWriter writer = new PrintWriter(stringWriter);
     private static MessageSystem ms = new MessageSystem();
+    private static DatabaseService databaseService = new DatabaseService(ms);
     final private static Frontend frontend = new Frontend(ms);
+    final  private static Long timeToSleep = 6000L;
     @Before
     public void init() throws Exception{
         url = "/registration";
+        (new Thread(frontend)).start();
+        (new Thread(databaseService)).start();
         Mockito.when(response.getWriter()).thenReturn(writer);
         Mockito.when(request.getSession()).thenReturn(httpSession);
         Mockito.when(request.getPathInfo()).thenReturn(url);
@@ -35,7 +41,11 @@ public class RegistrateTest {
         Mockito.when(request.getParameter("login")).thenReturn("test");
         Mockito.when(request.getParameter("password")).thenReturn("test");
         frontend.doPost(request, response);
-        Assert.assertTrue(stringWriter.toString().contains("Already registarted"));
+        Thread.sleep(timeToSleep);
+        Mockito.when(request.getPathInfo()).thenReturn("/reging");
+        frontend.doGet(request, response);
+        System.out.println(stringWriter);
+        Assert.assertTrue(stringWriter.toString().contains("Duplicate username"));
     }
     @Test
     public void testGoodRegistration() throws Exception{
@@ -43,6 +53,9 @@ public class RegistrateTest {
         Mockito.when(request.getParameter("login")).thenReturn(randomUser);
         Mockito.when(request.getParameter("password")).thenReturn("test");
         frontend.doPost(request, response);
+        Thread.sleep(timeToSleep);
+        Mockito.when(request.getPathInfo()).thenReturn("/reging");
+        frontend.doGet(request, response);
         Assert.assertTrue(stringWriter.toString().contains("Successfully registrated"));
     }
 }

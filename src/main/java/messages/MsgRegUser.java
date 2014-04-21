@@ -1,6 +1,5 @@
 package messages;
 
-import com.mysql.jdbc.exceptions.jdbc4.CommunicationsException;
 import databaseservice.DatabaseService;
 import logic.User;
 import org.hibernate.exception.JDBCConnectionException;
@@ -28,7 +27,6 @@ public class MsgRegUser extends MsgToAS{
             }
         }
         catch (JDBCConnectionException e){
-            System.out.println("SADAD");
             databaseService.getMessageSystem().sendMessage(new MsgRegStatus(getTo(),getFrom(),sessionId, "Some works on server"));
         }
     }

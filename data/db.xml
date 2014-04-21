@@ -1,0 +1,3 @@
+<class type="util.resources.Database">
+    <config>hibernate.cfg.xml</config>
+</class>

@@ -34,6 +34,7 @@ public class RoutingTest {
         Mockito.when(request.getPathInfo()).thenReturn(url);
         Mockito.when(httpSession.getAttribute("userId")).thenReturn(null);
         frontend.doGet(request, response);
+        System.out.println(stringWriter);
         Assert.assertTrue(stringWriter.toString().contains("<title>Auth</title>"));
     }
     @Test
