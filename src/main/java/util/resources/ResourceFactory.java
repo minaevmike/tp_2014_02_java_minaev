@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class ResourceFactory {
     private static ResourceFactory resourceFactory = null;
-    private static Map<String, Resource> resourceMap = new HashMap<>();
+    private Map<String, Resource> resourceMap = new HashMap<>();
     private ResourceFactory(){
 
     }
@@ -23,7 +23,7 @@ public class ResourceFactory {
         resourceMap.put(path, (Resource)ReadXMLFileSax.readXML(path));
     }
 
-    public  Resource get(String path){
+    public Resource get(String path){
         Resource resource = resourceMap.get(path);
         if(resource == null){
             resource = (Resource)ReadXMLFileSax.readXML(path);

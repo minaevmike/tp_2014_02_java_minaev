@@ -21,6 +21,7 @@ public class DatabaseService implements Abonent,Runnable {
         ms.getAddressService().setAccountService(address);
     }
 
+
     public static User getUserByName(String name) throws HibernateException{
         TimeHelper.sleep(2000);
         return Factory.getInstance().getUserDAO().getUserByName(name);

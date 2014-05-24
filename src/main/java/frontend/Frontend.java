@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import databaseservice.DatabaseService;
 import messages.TimeHelper;
 import templater.PageGenerator;
 import messages.*;
@@ -130,7 +131,7 @@ public class Frontend  extends HttpServlet implements Abonent,Runnable {
             }
             case "/registration": {
                 Address frontendAddress = getAddress();
-                Address databaseServiceAddress = ms.getAddressService().getAccountService();
+                Address databaseServiceAddress = ms.getAddressService().getService(DatabaseService.class);
                 ms.sendMessage(new MsgRegUser(frontendAddress,databaseServiceAddress,login,pass,sessionId));
                 timerVariables(response, templates.getReging(), "Reg Start");
                 response.sendRedirect("/reging");

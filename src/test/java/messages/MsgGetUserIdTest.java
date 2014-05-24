@@ -26,13 +26,18 @@ public class MsgGetUserIdTest {
         ms.addService(frontend);
     }
 
+    private void waitEmpty(Abonent abonent){
+        while(ms.isQueueEmpty(abonent)){
+            TimeHelper.sleep(100);
+        }
+    }
     @Test
      public void testAuthMsg(){
         UserSession userSession = new UserSession(sessionId, login, ms.getAddressService());
         Address frontendAddress = frontend.getAddress();
         Address accountServiceAddress = userSession.getAccountService();
         ms.sendMessage(new MsgGetUserId(frontendAddress, accountServiceAddress, login, pass, sessionId));
-        TimeHelper.sleep(5000);
+        waitEmpty(frontend);
         ms.execForAbonent(frontend);
         Mockito.verify(frontend, Mockito.atLeastOnce()).setId(Mockito.anyString(),Mockito.anyString());
     }
@@ -40,7 +45,7 @@ public class MsgGetUserIdTest {
     public void testRegMsg(){
         Address frontendAddress = frontend.getAddress();
         ms.sendMessage(new MsgRegUser(frontendAddress,ms.getAddressService().getAccountService(),login,pass,sessionId));
-        TimeHelper.sleep(6000);
+        waitEmpty(frontend);
         ms.execForAbonent(frontend);
         Mockito.verify(frontend, Mockito.atLeastOnce()).setRegStatus(Mockito.anyString(),Mockito.anyString());
     }
